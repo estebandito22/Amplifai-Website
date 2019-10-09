@@ -1,0 +1,28 @@
+<div class="form-group">
+  <div class="row">
+    {% for field in user_form %}
+    <div class="col-sm-12 col-md-12 col-lg-6">
+      <div class="col-sm-offset-2 col-sm-10">
+        <span class="text-danger small">{{ field.errors }}</span>
+        {% if field.label == 'Profile Picture' %}
+          <span class="text-danger small" id="form-error-profile-picture"></span>
+        {% endif %}
+        {% if field.label == 'Profile Banner' %}
+          <span class="text-danger small" id="form-error-profile-banner"></span>
+        {% endif %}
+      </div>
+
+      <div class='file-input form__group'>
+        {{ field }}
+        <span class='button'>Choose</span>
+        <label class='label form__label' data-js-label>{{ field.label }}</label>
+      </div>
+
+
+    </div>
+    <div class="">
+      <span><br></span>
+    </div>
+    {% endfor %}
+  </div>
+</div>

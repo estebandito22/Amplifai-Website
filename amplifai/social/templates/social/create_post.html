@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="container" id="create-post-container">
+  <form class="form-horizontal" action="{% url 'social:create_post' pk=user.pk %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="row create-post-top">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-lg-6 col-md-12 post-image-row form-group">
+            <div class="post-image-upload shadow p-3 mb-4 bg-white rounded mt-5">
+              {% for field in social_post_form %}
+              {% if field.label == 'Attachments' %}
+                <span class="text-danger small">{{ field.error }}</span>
+              {% endif %}
+              {% endfor %}
+              {{ social_post_form.media }}
+              <label for="id_social_post_form-media">
+                <table id="wrapper">
+                  <tr>
+                    <td>
+                      <p>Drag image here or click in this area.</p>
+                      <img id="post-image" src="" alt="your image" style="display: none;" />
+                    </td>
+                  </tr>
+                </table>
+              </label>
+            </div>
+          </div> <!-- end post image column -->
+
+          <div class="col-lg-6 col-md-12">
+            <div id="hashtag-holder">
+                <div class="form-group row">
+                  <div class="container">
+                    <h4 class="hashtag-table-title">Top Hashtags - Last 7 Days</h4>
+                    <div class="latest-hashtags-form">
+                      <div class="hashtag-checkbox-list">
+                        <div class="row">
+                          <table class="hashtag-table" id="latest-hashtag-table">
+                            {% for hashtag in latest_hashtags_form.latest_hashtags %}
+                            <tr scope="row" class="row" style="display: none;">
+                              <td class="col-12">
+                                {{ hashtag.tag }}
+                                <div class="btn-group btn-block">
+                                  <label for="id_latest_hashtags_{{ forloop.counter0 }}" class="btn btn-success">
+                                    <span class="fa fa-plus"></span>
+                                    <span class="fa fa-minus"></span>
+                                  </label>
+                                  <label for="id_latest_hashtags_{{ forloop.counter0 }}" class="btn btn-outline-light active checkbox-btn">
+                                    {{ hashtag.choice_label }}
+                                  </label>
+                                </div>
+                              </td>
+                            </tr>
+                            {% endfor %}
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> <!-- end recent hashtags row -->
+                <!-- <div class="form-group row">
+                  <div class="container hashtag-table-container">
+                    <h4 class="hashtag-table-title">Top Hashtags - All Time</h4>
+                    <div class="form-group">
+                      <div class="latest-hashtags-form">
+                        <div class="hashtag-checkbox-list">
+                          <div class="row">
+                            <table class="hashtag-table" id="latest-hashtag-table">
+                              {% for hashtag in ll_time_hashtags_form.all_time_hashtags %}
+                              <tr scope="row" class="row" style="display: none;">
+                                <td class="col-12">
+                                  {{ hashtag.tag }}
+                                  <div class="btn-group btn-block">
+                                    <label for="id_latest_hashtags_{{ forloop.counter0 }}" class="btn btn-success">
+                                      <span class="fa fa-plus"></span>
+                                      <span class="fa fa-minus"></span>
+                                    </label>
+                                    <label for="id_latest_hashtags_{{ forloop.counter0 }}" class="btn btn-outline-light active checkbox-btn">
+                                      {{ hashtag.choice_label }}
+                                    </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              {% endfor %}
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> <!-- end all time hashtags row -->
+
+            </div> <!-- end hashtag holder -->
+          </div> <!-- end hashtags column -->
+        </div> <!-- end hashtag and image row -->
+        <div class="row">
+          <div class="col-12 caption-input">
+            <div class="caption-textarea">
+              <div class="form__group">
+                {{ social_post_form.text }}
+                <label for="id_social_post_form-text" class="form__label md-label">Caption...</label>
+              </div>
+            </div>
+          </div>
+        </div> <!-- end caption input row -->
+      </div> <!-- top section column -->
+    </div> <!-- end top section row -->
+
+
+
+    <div class="row form-group">
+
+      <div class="col-12">
+        <div class="row" id="platform-select">
+          <div class="col-3">
+            <div id="parent">
+                <div id="child"><h6>Select Platforms:</h6></div>
+            </div>
+
+          </div>
+          <div class="col-3">
+            {{ social_post_form.instagram_post }}
+            <div class="btn-group btn-sm">
+              <label for="id_social_post_form-instagram_post" class="btn btn-success">
+                <span class="fa fa-plus"></span>
+                <span class="fa fa-minus"></span>
+              </label>
+              <label for="id_social_post_form-instagram_post" class="btn btn-outline-light active checkbox-btn">
+                {{ social_post_form.instagram_post.label }}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-3">
+            {{ social_post_form.twitter_post }}
+            <div class="btn-group btn-sm">
+              <label for="id_social_post_form-twitter_post" class="btn btn-success">
+                <span class="fa fa-plus"></span>
+                <span class="fa fa-minus"></span>
+              </label>
+              <label for="id_social_post_form-twitter_post" class="btn btn-outline-light active checkbox-btn">
+                {{ social_post_form.twitter_post.label }}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-3">
+            {{ social_post_form.facebook_post }}
+            <div class="btn-group btn-sm">
+              <label for="id_social_post_form-facebook_post" class="btn btn-success">
+                <span class="fa fa-plus"></span>
+                <span class="fa fa-minus"></span>
+              </label>
+              <label for="id_social_post_form-facebook_post" class="btn btn-outline-light active checkbox-btn">
+                {{ social_post_form.facebook_post.label }}
+              </label>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row" id="create-post-row">
+          <div class="col-md-2 col-sm-0">
+          </div>
+          <div class="col-md-4 col-sm-6">
+            <div class="form__group">
+              {{ social_post_promotion_form.budget }}
+              <label for="id_social_post_promotion_form-budget" class="form__label md-label">Budget ($USD)</label>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-6">
+            <div id="parent">
+              <div id="child-btn">
+                <button type="submit" class="btn btn-outline-success btn-xs">
+                  Schedule Post
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2 col-sm-0">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </form>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script src="{% static 'amplifai/js/discover.js' %}"></script>
+<script src="{% static 'amplifai/js/social.js' %}"></script>
+{% endblock %}

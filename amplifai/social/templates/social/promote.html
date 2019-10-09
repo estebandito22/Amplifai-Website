@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load app_filters %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="container shadow">
+  <div class="row influencer-card-holder-top">
+    <br>
+  </div>
+
+  {% for x in social_posts reversed %}
+    <div class="row influencer-card-holder mb-3">
+      <!-- left side info -->
+      <div class="col-lg-4 col-md-12">
+        <div class="card bg-light social-post-card p-0 mb-3 mt-3 border">
+          <div class="card-body p-0 shadow">
+            <img src="{{ x.0.media.url }}" alt="" class="img-fluid w-100">
+            <div class="social-post-text-area">
+              <p>{{ x.0.text }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end left side info -->
+
+      <!-- right side info -->
+      <div class="col-lg-8 col-md-12 pr-2 pl-0 mt-3 mb-3 ">
+        <div class="accordion" id="accordionExample{{ forloop.counter0 }}">
+          <div class="card">
+            <div class="card-header shadow" id="headingOne{{ forloop.counter0 }}">
+              <h2 class="mb-0">
+                <button class="btn btn-link accordion-link" type="button" data-toggle="collapse" data-target="#collapseOne{{ forloop.counter0 }}" aria-expanded="true" aria-controls="collapseOne{{ forloop.counter0 }}">
+                  Social Stats
+                </button>
+              </h2>
+            </div>
+
+            <div id="collapseOne{{ forloop.counter0 }}" class="collapse show" aria-labelledby="headingOne{{ forloop.counter0 }}" data-parent="#accordionExample{{ forloop.counter0 }}">
+              <div class="card-body pt-3 pb-3">
+                <div class="row">
+
+
+                    <!-- <div class="card">
+                      <div class="card-body">
+                        <div class="row"> -->
+
+                          <div class="col-4 organic-col">
+                            <div class="row">
+                              <div class="linear-prog-area">
+                                <div class="linear-progress linear-absolute-progress" data-prog-numerator="{{ x.0.twitter_followers|add:x.0.instagram_followers|add:x.0.facebook_followers }}" data-prog-denominator="{{ max_followers.followers_sum__max }}"">
+                                  <div></div>
+                                  <h6 class="progress-title">Organic Followers Count</h6>
+                                </div>
+                              </div><!-- linear-prog-area-->
+                            </div>
+                            <div class="row">
+                              <div class="linear-prog-area">
+                                <div class="linear-progress linear-absolute-progress" data-prog-numerator="{{ x.0.twitter_engagements|add:x.0.instagram_engagements|add:x.0.facebook_engagements }}" data-prog-denominator="{{ max_engagements.engagements_sum__max }}"">
+                                  <div></div>
+                                  <h6 class="progress-title">Organic Engagements Count</h6>
+                                </div>
+                              </div><!-- linear-prog-area-->
+                            </div>
+                          </div>
+                          <div class="col-4">
+                            <div class="row">
+                              <div class="linear-prog-area">
+                                <div class="linear-progress linear-absolute-progress" data-prog-numerator="{{ x.1 }}" data-prog-denominator="{{ max_paid_followers }}"">
+                                  <div></div>
+                                  <h6 class="progress-title">Paid Followers</h6>
+                                </div>
+                              </div><!-- linear-prog-area-->
+                            </div>
+                            <div class="row">
+                              <div class="linear-prog-area">
+                                <div class="linear-progress linear-absolute-progress" data-prog-numerator="{{ x.2 }}" data-prog-denominator="{{ max_paid_engagements }}"">
+                                  <div></div>
+                                  <h6 class="progress-title">Paid Engagements</h6>
+                                </div>
+                              </div><!-- linear-prog-area-->
+                            </div>
+                          </div>
+                          <div class="col-4">
+                            <div class="row">
+                              <div class="linear-prog-area">
+                                <div class="linear-progress linear-minmax-progress" data-prog-numerator="{{ x.4 }}" data-prog-denominator="{{ max_min_cpf }}" data-prog-min="{{ min_cpf }}">
+                                  <div></div>
+                                  <h6 class="progress-title">Cost Per Follower</h6>
+                                </div>
+                              </div><!-- linear-prog-area-->
+                            </div>
+                            <div class="row">
+                              <div class="linear-prog-area">
+                                <div class="linear-progress linear-minmax-progress" data-prog-numerator="{{ x.5 }}" data-prog-denominator="{{ max_min_cpe }}" data-prog-min="{{ min_cpe }}">
+                                  <div></div>
+                                  <h6 class="progress-title">Cost Per Engagement</h6>
+                                </div>
+                              </div><!-- linear-prog-area-->
+                            </div>
+                          </div>
+
+                        <!-- </div>
+                      </div>
+                    </div> -->
+
+
+                </div>
+              </div>
+            </div>
+          </div> <!-- end promotion detials accordion -->
+
+          <div class="card">
+            <div class="card-header shadow p-0 mt-1" id="headingTwo{{ forloop.counter0 }}">
+              <h2 class="mb-0">
+                <button class="btn btn-link accordion-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo{{ forloop.counter0 }}" aria-expanded="false" aria-controls="collapseTwo{{ forloop.counter0 }}">
+                  Promotion Budget
+                </button>
+              </h2>
+            </div>
+            <div id="collapseTwo{{ forloop.counter0 }}" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample{{ forloop.counter0 }}">
+              <div class="card-body stats-card">
+                <div class="row">
+                  <div class="col-6">
+                    <div class="row mb-3 ml-3 mt-4">
+                      <h6>Total Budget: {{ x.6 }}</h6>
+                    </div>
+                    <div class="row mb-3 ml-3">
+                      <h6>Total Spend: {{ x.4 }}</h6>
+                    </div>
+                    <div class="row mb-3 ml-3">
+                      <h6>Remaining Budget: {{ x.6|subtract:x.4 }}</h6>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <form class="form-horizontal" action="{% url 'social:promote' pk=user.pk %}" method="POST" enctype="multipart/form-data">
+                      <!-- <div class="row"> -->
+                        <div class="row mb-5">
+                          <div class="form__group w-100">
+                            {{ social_post_promotion_form.budget }}
+                            <label for="id_social_post_promotion_form-budget" class="form__label md-label">Add Budget ($USD)</label>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div id="parent">
+                            <div id="child-btn text-left">
+                              <button type="submit" class="btn btn-outline-success btn-xs">
+                                Promote Post
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      <!-- </div> -->
+                    </form>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div> <!-- end promotion post accordion -->
+        </div> <!-- end accordion -->
+      </div><!-- end right side info -->
+
+    </div>
+  {% endfor %}
+
+
+
+  <div class="row influencer-card-holder-bottom">
+    <br>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script src="{% static 'amplifai/js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'amplifai/js/progressbar.min.js' %}"></script>
+<script src="{% static 'amplifai/js/promote.js' %}"></script>
+{% endblock %}

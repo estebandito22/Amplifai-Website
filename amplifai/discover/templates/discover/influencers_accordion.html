@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+<link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,800,900" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block body %}
+<div class="container shadow">
+  <div class="row influencer-card-holder-top">
+    <br>
+  </div>
+
+  {% for influencer in latest_influencers %}
+    <div class="row influencer-card-holder mb-4">
+      <!-- left side info -->
+      <div class="col-lg-4 col-md-12 h-100">
+        <div class="card bg-light p-0 border influencer-card">
+          <div class="card-body text-center p-0 shadow">
+            <div class="list-img-square">
+              <img src="{{ influencer.0.twitter_profile_picture.url }}" alt="" class="img-fluid w-100">
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <div class="pt-3 pl-3 align-left">
+                  <h5>{{ influencer.0.first_name}} {{ influencer.0.last_name }}</h5>
+                  <h6>@{{ influencer.0.twitter_handle }}</h6>
+                </div>
+              </div>
+              <div class="col-12 align-center mt-3 mb-3">
+                <table style="height: 100%; width:100%;">
+                <tbody>
+                  <tr>
+                    <td class="align-middle">
+                      {% if influencer.1 %}
+                        <!-- <a href="{% url 'discover:direct_messages' pk=user.pk thread_pk=influencer.1.pk %}" class="direct-message-btn">Direct Message <i class="fa fa-paper-plane"></i></a> -->
+                        <button href="{% url 'discover:direct_messages' pk=user.pk thread_pk=influencer.1.pk %}" class="btn btn-outline-secondary btn-md">Direct Message <i class="fa fa-paper-plane"></i></button>
+                      {% else %}
+                        <form id="direct_message_form" class="form-horizontal" action="{% url 'discover:influencers' pk=user.pk %}" method="POST" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <input type="hidden" name="influencer" id="id_influencer" value="{{ influencer.0.pk }}">
+                          <!-- <a class="direct-message-btn" href="javascript:{}" onclick="document.getElementById('direct_message_form').submit();">Direct Message <i class="fa fa-paper-plane"></i></a> -->
+                         <button type="submit" class="btn btn-outline-secondary btn-md">Direct Message <i class="fa fa-paper-plane"></i></button>
+                        </form>
+                      {% endif %}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end left side info -->
+
+      <!-- right side info -->
+        <div class="col-lg-8 col-md-12 pr-2 pl-0 h-100">
+
+        <div class="accordion" id="accordionExample{{ forloop.counter0 }}">
+          <div class="card">
+            <div class="card-header shadow" id="headingOne{{ forloop.counter0 }}">
+              <h2 class="mb-0">
+                <button class="btn btn-link accordion-link" type="button" data-toggle="collapse" data-target="#collapseOne{{ forloop.counter0 }}" aria-expanded="true" aria-controls="collapseOne{{ forloop.counter0 }}">
+                  Social Stats
+                </button>
+              </h2>
+            </div>
+
+            <div id="collapseOne{{ forloop.counter0 }}" class="collapse show" aria-labelledby="headingOne{{ forloop.counter0 }}" data-parent="#accordionExample{{ forloop.counter0 }}">
+              <div class="card-body">
+                <div class="row">
+
+
+                  <div class="col-6">
+                    <div class="radial-prog-area">
+                      <div class="radial-progress radial-progress-top-left" data-prog-numerator="{{ influencer.0.followers_count }}" data-prog-denominator="{{ max_followers_count.followers_count__max }}"">
+                        <div></div>
+                        <h6 class="progress-title">Followers Count</h6>
+                      </div>
+                    </div><!-- radial-prog-area-->
+                  </div>
+                  <div class="col-6">
+                    <div class="radial-prog-area">
+                      <div class="radial-progress radial-progress-top-right" data-prog-numerator="{{influencer.0.tweet_count }}" data-prog-denominator="{{ max_tweet_count.tweet_count__max }}">
+                        <div></div>
+                        <h6 class="progress-title">Tweet Count</h6>
+                      </div>
+                    </div><!-- radial-prog-area-->
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-4">
+                    <div class="radial-prog-area">
+                      <div class="radial-progress radial-progress-bottom" data-prog-numerator="{{ influencer.0.influence_ratio }}" data-prog-denominator="{{ max_influence_ratio.influence_ratio__max }}">
+                        <div></div>
+                        <h6 class="progress-title">Influence Ratio</h6>
+                      </div>
+                    </div><!-- radial-prog-area-->
+                  </div>
+                  <div class="col-4">
+                    <div class="radial-prog-area">
+                      <div class="radial-progress radial-progress-bottom" data-prog-numerator="{{ influencer.0.viral_ratio}}" data-prog-denominator="{{ max_viral_ratio.viral_ratio__max }}">
+                        <div></div>
+                        <h6 class="progress-title">Viral Ratio</h6>
+                      </div>
+                    </div><!-- radial-prog-area-->
+                  </div>
+                  <div class="col-4">
+                    <div class="radial-prog-area">
+                      <div class="radial-progress radial-progress-bottom" data-prog-numerator="{{ influencer.0.engagement_ratio }}" data-prog-denominator="{{ max_engagement_ratio.engagement_ratio__max }}">
+                        <div></div>
+                        <h6 class="progress-title">Engagement Ratio</h6>
+                      </div>
+                    </div><!-- radial-prog-area-->
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div> <!-- end promotion detials accordion -->
+
+          <div class="card">
+            <div class="card-header shadow" id="headingTwo{{ forloop.counter0 }}">
+              <h2 class="mb-0">
+                <button class="btn btn-link accordion-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo{{ forloop.counter0 }}" aria-expanded="false" aria-controls="collapseTwo{{ forloop.counter0 }}">
+                  Steaming Stats
+                </button>
+              </h2>
+            </div>
+            <div id="collapseTwo{{ forloop.counter0 }}" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample{{ forloop.counter0 }}">
+              <div class="card-body stats-card">
+                <div class="row">
+                  <div class="col-6">
+                    <div class="row mb-3 ml-3 mt-4">
+                      <h6>Playlist Count: 20</h6>
+                    </div>
+                    <div class="row mb-3 ml-3">
+                      <h6>Playlist Streams: 1.2M</h6>
+                    </div>
+                    <div class="row mb-3 ml-3">
+                      <h6>Blog Posts: 197</h6>
+                    </div>
+                  </div>
+
+                </div>
+
+
+              </div>
+            </div>
+          </div> <!-- end promotion post accordion -->
+        </div> <!-- end accordion -->
+      </div><!-- end right side info -->
+
+
+    </div>
+  {% endfor %}
+  <div class="row influencer-card-holder-bottom">
+    <br>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+  <script src="{% static 'amplifai/js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'amplifai/js/progressbar.min.js' %}"></script>
+  <script src="{% static 'amplifai/js/discover.js' %}"></script>
+
+{% endblock %}

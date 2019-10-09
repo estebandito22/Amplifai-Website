@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block body %}
+
+<!-- </div> -->
+<div class="img-holder img-fluid" data-image="{% static 'amplifai/images/amplifai_top_image_light_new_logo_rasterize.jpg' %}" data-image-mobile="{% static 'amplifai/images/amplifai_top_image.jpg' %}" data-width="1280" data-height="800"></div>
+
+<section>
+  <h1 class="section-heading">Discover and Connect</h1>
+  <p class="section-text">
+    Our artificial intelligence listens to your music and finds your potential fans on social media platforms.
+    Daily recommendations allow you to connect with the right people without spending any time finding them.
+  </p>
+</section>
+
+<div class="img-holder" data-image="{% static 'amplifai/images/aimee_influencer_convo.jpg' %}" data-image-mobile="{% static 'amplifai/images/aimee_influencer_convo.jpg' %}" data-width="1280" data-height="800"></div>
+
+<section>
+  <h1 class="section-heading">Automate and Create</h1>
+  <p class="section-text">
+    Posting, interacting and scheduling your social media efforts takes valuable time away from creating music.
+    Amplif.ai schedules all of your posts to go out when your fans are most active and alerts you to important
+    conversations online so you can jump in and stay connected.
+  </p>
+</section>
+
+<div class="img-holder" data-image="{% static 'amplifai/images/aimee_scheduling_posts.jpg' %}" data-image-mobile="{% static 'amplifai/images/aimee_scheduling_posts.jpg' %}" data-width="1280" data-height="800"></div>
+
+<section>
+  <h1 class="section-heading">Precision Amplification</h1>
+  <p class="section-text">
+    Ready for the next level of social promotion?  Reach millions of <em>your</em> potential fans through promoted content on
+    Facebook, Instagram and Twitter.  Our artificial intelligence creates insanely precise targeting for marketing
+    on social platforms.  Spend dramatically less on your marketing by reaching the right audience.
+  </p>
+</section>
+
+<div class="img-holder" data-image="{% static 'amplifai/images/aimee_precision_marketing.jpg' %}" data-image-mobile="{% static 'amplifai/images/aimee_precision_marketing.jpg' %}" data-width="1280" data-height="800"></div>
+
+<section>
+  <h1 class="section-heading" align="center">Are you ready to amplify your music?</h1>
+  <div class="container" align="center">
+    <!-- <button id="joinButton" type="button" class="btn btn-outline-success btn-lg" href="{% url 'accounts:signup' %}">Sign Up</button> -->
+    <a id="joinButton" class="btn btn-outline-success btn-lg" href="{% url 'accounts:signup' %}" role="button">Sign Up</a>
+  </div>
+</section>
+
+
+
+{% endblock %}

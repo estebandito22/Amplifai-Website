@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+<link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,800,900" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+  <div class="container" id="discover-nav-bar">
+    <ul class="nav nav-tabs nav-fill navbar-light bg-light">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'discover:influencers' pk=user.pk %}">Influencers</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="{% url 'discover:hashtags' pk=user.pk %}">Hashtags</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+
+      <div class="col-lg-6 col-md-12">
+        <div class="container">
+          <h4 class="hashtag-table-title">Top Hashtags - Last 7 Days</h4>
+          <div class="latest-hashtags-form">
+            <div class="hashtag-checkbox-list">
+              <div class="row">
+                <table class="hashtag-table" id="latest-hashtag-table">
+                  {% for hashtag in latest_hashtags_form.latest_hashtags %}
+                  <tr scope="row" class="row" style="display: none;">
+                    <td class="col-12">
+                      {{ hashtag.tag }}
+                      <div class="btn-group btn-block">
+                        <label for="id_latest_hashtags_{{ forloop.counter0 }}" class="btn btn-success">
+                          <span class="fa fa-plus"></span>
+                          <span class="fa fa-minus"></span>
+                        </label>
+                        <label for="id_latest_hashtags_{{ forloop.counter0 }}" class="btn btn-outline-light active checkbox-btn">
+                          {{ hashtag.choice_label }}
+                        </label>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 col-md-12">
+        <div class="container hashtag-table-container">
+          <h4 class="hashtag-table-title">Top Hashtags - All Time</h4>
+          <div class="form-group">
+            <div class="latest-hashtags-form">
+              <div class="hashtag-checkbox-list">
+                <div class="row">
+                  <table class="hashtag-table" id="alltime-hashtag-table">
+                    {% for hashtag in all_time_hashtags_form.all_time_hashtags %}
+                    <tr scope="row" class="row" style="display: none;">
+                      <td class="col-12">
+                        {{ hashtag.tag }}
+                        <div class="btn-group btn-block">
+                          <label for="id_all_time_hashtags_{{ forloop.counter0 }}" class="btn btn-success">
+                            <span class="fa fa-plus"></span>
+                            <span class="fa fa-minus"></span>
+                          </label>
+                          <label for="id_all_time_hashtags_{{ forloop.counter0 }}" class="btn btn-outline-light active checkbox-btn">
+                            {{ hashtag.choice_label }}
+                          </label>
+                        </div>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <button type="submit" class="btn btn-outline-success btn-xs">
+          Start Post
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block footer %}
+<script src="{% static 'amplifai/js/discover.js' %}"></script>
+{% endblock %}
