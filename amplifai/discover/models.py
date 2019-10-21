@@ -41,3 +41,11 @@ class DirectMessage(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class SocialTopic(models.Model):
+    influencer = models.ManyToManyField(Influencer)
+    topic = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.topic

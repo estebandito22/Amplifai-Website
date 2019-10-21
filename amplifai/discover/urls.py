@@ -7,4 +7,5 @@ urlpatterns = [
     url(r"^influencers/(?P<pk>\d+)/$", views.InfluencersView.as_view(), name='influencers'),
     # url(r"^hashtags/(?P<pk>\d+)/$", views.HashtagsView.as_view(), name='hashtags'),
     url(r"^dm/(?P<pk>\d+)/(?P<thread_pk>\d+)/$", views.DirectMessageView.as_view(), name='direct_messages'),
+    url(r"^influencers/(?P<pk>\d+)/(?P<influencer_pk>\d+)/$", views.SingleInfluencerView.as_view(), name='influencer_details'),
 ]

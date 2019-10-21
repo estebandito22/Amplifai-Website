@@ -60,7 +60,8 @@ $(function() {
 
 function reloadPage(){
   location.reload(true);
-  // $("#module").load(location.href + " #module");
+  // (location.href + " .profile-section").reload(true);
+  // $(".profile-section").load(location.href + " .profile-section");
 };
 
 // function generate_create_song_form_handler(i){
@@ -177,7 +178,7 @@ function generate_analyze_song_form_handler(i, j){
 
 function assign_analyze_song_form_handlers(){
   console.log('assinging analyze song form handlers')
-  var num_albums = $('.add-song-form').length
+  var num_albums = $('.analyze-song-form').length
   console.log(num_albums + ' albums found!')
   for (var i = 1; i <= num_albums; i++) {
     var num_songs = $('#album-card-' + i + ' .analyze-song-form').length
@@ -372,11 +373,24 @@ $('.add-song-button').on('click', function() {
 
 // TODO: Check if this introduced a bug on the ablum collapse function
 // the current open accordion will not be able to close itself
-$('[data-toggle="collapse"]').on('click',function(e){
-    if ( $(this).parents('.accordion').find('.collapse.show') ){
-        var idx = $(this).index('[data-toggle="collapse"]');
-        if (idx == $('.collapse.show').index('.collapse')) {
-            e.stopPropagation();
-        }
-    }
-});
+// $('[data-toggle="collapse"]').on('click',function(e){
+//     if ( $(this).parents('.accordion').find('.collapse.show') ){
+//         var idx = $(this).index('[data-toggle="collapse"]');
+//         if (idx == $('.collapse.show').index('.collapse')) {
+//             e.stopPropagation();
+//         }
+//     }
+// });
+
+
+// When the user scrolls down 20px from the top of the document, slide down the navbar
+// When the user scrolls to the top of the page, slide up the navbar (50px out of the top view)
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+    document.getElementById("navbar").style.top = "-80px";
+  } else {
+    document.getElementById("navbar").style.top = "0";
+  }
+}

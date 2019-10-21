@@ -5,36 +5,37 @@
 {% endblock %}
 
 {% block body %}
+<div class="container message-container pt-5">
+  <div class="row mt-0 shadow-sm">
+    <div class="col-md-4 border pr-0 bg-light">
 
-<div class="container message-container">
-  <div class="row">
-
-    <div class="col-md-4">
-
-      <div class="search">
+      <!-- <div class="search">
           <input class="message-input" type="text" placeholder="search" />
           <i class="fa fa-search"></i>
+      </div> -->
+      <div class="text-left pt-3">
+        <h5>Direct Messages</h5>
       </div>
 
-      <div class="people-list">
+      <div class="people-list pr-2">
         <div class="list message-ul">
           {% for thread in direct_message_threads %}
           <a href="{% url 'discover:direct_messages' pk=user.pk thread_pk=thread.pk %}">
-            <div class="clearfix message-li">
+            <div class="clearfix message-li border-top pt-2 pb-1">
             <div class="message-img">
               <img class="img-fluid" src="{{ thread.influencer.twitter_profile_picture.url }}" alt="avatar" />
             </div>
 
-            <div class="about">
-              <div class="name">{{ thread.influencer }}</div>
-              <div class="status">{% if thread.directmessage_set.last %}{{ thread.directmessage_set.last }}{% endif %}</div>
+            <div class="about w-50">
+              <div class="name no-wrap">{{ thread.influencer }}</div>
+              <div class="status no-wrap">{% if thread.directmessage_set.last %}{{ thread.directmessage_set.last }}{% endif %}</div>
             </div>
 
           </div>
           </a>
 
           {% endfor %}
-         <div class="influencer-card-holder-bottom">
+         <div class="border-top">
             <br>
           </div>
         </div>
@@ -42,7 +43,7 @@
 
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-8 pl-0 pr-0 border-top border-right border-bottom">
       {% for thread in direct_message_threads %}
         {% if thread.pk == thread_pk %}
           <div class="chat">
@@ -84,7 +85,7 @@
             <div class="chat-message">
               <form class="form-horizontal" action="{% url 'discover:direct_messages' pk=user.pk thread_pk=thread_pk %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="message-textarea clearfix">
+                <div class="message-textarea clearfix border">
                   <div class="form__group">
                       {{ dm_form.text }}
                       <label for="id_text" class="form__label md-label">Message...</label>
@@ -103,34 +104,7 @@
 
   </div> <!-- end chat column -->
 </div>
-
-
-
-
-<script id="message-template" type="text/x-handlebars-template">
-  <li class="clearfix message-li">
-    <div class="message-data align-right">
-      <span class="message-data-time" >{{time}}, Today</span> &nbsp; &nbsp;
-      <span class="message-data-name" >Olia</span> <i class="fa fa-circle me"></i>
-    </div>
-    <div class="message other-message float-right">
-      {{messageOutput}}
-    </div>
-  </li>
-</script>
-
-<script id="message-response-template" type="text/x-handlebars-template">
-  <li class="message-li">
-    <div class="message-data">
-      <span class="message-data-name"><i class="fa fa-circle online"></i> Vincent</span>
-      <span class="message-data-time">{{time}}, Today</span>
-    </div>
-    <div class="message my-message">
-      {{response}}
-    </div>
-  </li>
-</script>
-
+</div>
 {% endblock %}
 
 {% block footer %}

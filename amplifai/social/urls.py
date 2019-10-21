@@ -9,4 +9,5 @@ urlpatterns = [
     # url(r"^history/(?P<pk>\d+)/$", views.HistoryView.as_view(), name='history'),
     # url(r"^feed/(?P<pk>\d+)/$", views.FeedView.as_view(), name='feed'),
     url(r"^promote/(?P<pk>\d+)/$", views.PromoteView.as_view(), name='promote'),
+    url(r"^promote/(?P<pk>\d+)/(?P<social_post_pk>\d+)$", views.SinglePromoteView.as_view(), name='promote_details'),
 ]

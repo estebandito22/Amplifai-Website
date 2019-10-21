@@ -5,197 +5,153 @@
 {% endblock %}
 
 {% block body %}
-<div class="container" id="create-post-container">
+<!-- <div class="container pt-4">
+  <div class="jumbotron jumbotron-fluid bg-white border-bottom">
+    <div class="container">
+      <h1 class="display-4">Create</h1>
+      <p class="lead">Know your next move and maximize content engagment.  Reach<br>
+        a massive audience of your potential fans with promoted posts using precision targeting.</p>
+    </div>
+  </div>
+</div> -->
+<div class="container pt-5">
   <form class="form-horizontal" action="{% url 'social:create_post' pk=user.pk %}" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-
-    <div class="row create-post-top">
-      <div class="col-12">
-        <div class="row">
-          <div class="col-lg-6 col-md-12 post-image-row form-group">
-            <div class="post-image-upload shadow p-3 mb-4 bg-white rounded mt-5">
-              {% for field in social_post_form %}
-              {% if field.label == 'Attachments' %}
-                <span class="text-danger small">{{ field.error }}</span>
-              {% endif %}
-              {% endfor %}
-              {{ social_post_form.media }}
-              <label for="id_social_post_form-media">
-                <table id="wrapper">
-                  <tr>
-                    <td>
-                      <p>Drag image here or click in this area.</p>
-                      <img id="post-image" src="" alt="your image" style="display: none;" />
-                    </td>
-                  </tr>
-                </table>
-              </label>
-            </div>
-          </div> <!-- end post image column -->
-
-          <div class="col-lg-6 col-md-12">
-            <div id="hashtag-holder">
-                <div class="form-group row">
-                  <div class="container">
-                    <h4 class="hashtag-table-title">Top Hashtags - Last 7 Days</h4>
-                    <div class="latest-hashtags-form">
-                      <div class="hashtag-checkbox-list">
-                        <div class="row">
-                          <table class="hashtag-table" id="latest-hashtag-table">
-                            {% for hashtag in latest_hashtags_form.latest_hashtags %}
-                            <tr scope="row" class="row" style="display: none;">
-                              <td class="col-12">
-                                {{ hashtag.tag }}
-                                <div class="btn-group btn-block">
-                                  <label for="id_latest_hashtags_{{ forloop.counter0 }}" class="btn btn-success">
-                                    <span class="fa fa-plus"></span>
-                                    <span class="fa fa-minus"></span>
-                                  </label>
-                                  <label for="id_latest_hashtags_{{ forloop.counter0 }}" class="btn btn-outline-light active checkbox-btn">
-                                    {{ hashtag.choice_label }}
-                                  </label>
-                                </div>
-                              </td>
-                            </tr>
-                            {% endfor %}
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div> <!-- end recent hashtags row -->
-                <!-- <div class="form-group row">
-                  <div class="container hashtag-table-container">
-                    <h4 class="hashtag-table-title">Top Hashtags - All Time</h4>
-                    <div class="form-group">
-                      <div class="latest-hashtags-form">
-                        <div class="hashtag-checkbox-list">
-                          <div class="row">
-                            <table class="hashtag-table" id="latest-hashtag-table">
-                              {% for hashtag in ll_time_hashtags_form.all_time_hashtags %}
-                              <tr scope="row" class="row" style="display: none;">
-                                <td class="col-12">
-                                  {{ hashtag.tag }}
-                                  <div class="btn-group btn-block">
-                                    <label for="id_latest_hashtags_{{ forloop.counter0 }}" class="btn btn-success">
-                                      <span class="fa fa-plus"></span>
-                                      <span class="fa fa-minus"></span>
-                                    </label>
-                                    <label for="id_latest_hashtags_{{ forloop.counter0 }}" class="btn btn-outline-light active checkbox-btn">
-                                      {{ hashtag.choice_label }}
-                                    </label>
-                                  </div>
-                                </td>
-                              </tr>
-                              {% endfor %}
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div> <!-- end all time hashtags row -->
-
-            </div> <!-- end hashtag holder -->
-          </div> <!-- end hashtags column -->
-        </div> <!-- end hashtag and image row -->
-        <div class="row">
-          <div class="col-12 caption-input">
-            <div class="caption-textarea">
-              <div class="form__group">
-                {{ social_post_form.text }}
-                <label for="id_social_post_form-text" class="form__label md-label">Caption...</label>
-              </div>
-            </div>
-          </div>
-        </div> <!-- end caption input row -->
-      </div> <!-- top section column -->
-    </div> <!-- end top section row -->
-
-
-
-    <div class="row form-group">
-
-      <div class="col-12">
-        <div class="row" id="platform-select">
-          <div class="col-3">
-            <div id="parent">
-                <div id="child"><h6>Select Platforms:</h6></div>
-            </div>
-
-          </div>
-          <div class="col-3">
-            {{ social_post_form.instagram_post }}
-            <div class="btn-group btn-sm">
-              <label for="id_social_post_form-instagram_post" class="btn btn-success">
-                <span class="fa fa-plus"></span>
-                <span class="fa fa-minus"></span>
-              </label>
-              <label for="id_social_post_form-instagram_post" class="btn btn-outline-light active checkbox-btn">
-                {{ social_post_form.instagram_post.label }}
-              </label>
-            </div>
-          </div>
-
-          <div class="col-3">
-            {{ social_post_form.twitter_post }}
-            <div class="btn-group btn-sm">
-              <label for="id_social_post_form-twitter_post" class="btn btn-success">
-                <span class="fa fa-plus"></span>
-                <span class="fa fa-minus"></span>
-              </label>
-              <label for="id_social_post_form-twitter_post" class="btn btn-outline-light active checkbox-btn">
-                {{ social_post_form.twitter_post.label }}
-              </label>
-            </div>
-          </div>
-
-          <div class="col-3">
-            {{ social_post_form.facebook_post }}
-            <div class="btn-group btn-sm">
-              <label for="id_social_post_form-facebook_post" class="btn btn-success">
-                <span class="fa fa-plus"></span>
-                <span class="fa fa-minus"></span>
-              </label>
-              <label for="id_social_post_form-facebook_post" class="btn btn-outline-light active checkbox-btn">
-                {{ social_post_form.facebook_post.label }}
-              </label>
-            </div>
+    <div class="shadow-sm border p-0 m-0">
+      <div class="row p-0 m-0">
+        {% csrf_token %}
+        <div class="col-md-6 col-sm-12 p-0 border-right">
+          <div class="post-image-upload m-0 border-bottom">
+            {% for field in social_post_form %}
+            {% if field.label == 'Attachments' %}
+              <span class="text-danger small">{{ field.error }}</span>
+            {% endif %}
+            {% endfor %}
+            {{ social_post_form.media }}
+            <label for="id_social_post_form-media">
+              <table id="wrapper">
+                <tr>
+                  <td>
+                    <p>Drag image here or click in this area.</p>
+                    <img id="post-image" src="" alt="your image" style="display: none;" />
+                  </td>
+                </tr>
+              </table>
+            </label>
           </div>
         </div>
-
-
-        <div class="row" id="create-post-row">
-          <div class="col-md-2 col-sm-0">
-          </div>
-          <div class="col-md-4 col-sm-6">
-            <div class="form__group">
-              {{ social_post_promotion_form.budget }}
-              <label for="id_social_post_promotion_form-budget" class="form__label md-label">Budget ($USD)</label>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6">
-            <div id="parent">
-              <div id="child-btn">
-                <button type="submit" class="btn btn-outline-success btn-xs">
-                  Schedule Post
-                </button>
+        <div class="col-md-6 col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row pl-3 pb-2 pt-2">
+                <div class="text-center w-100">
+                  <h3>Next Suggested Action</h3>
+                </div>
+              </div>
+              <div class="text-center w-100">
+                <p>Share film from a live show.</p>
+              </div>
+              <div class="row pt-5">
+                <div class="col">
+                  <div class="circular-prog-area">
+                    <div class="circular-progress circular-progress-bottom" data-prog-numerator="87" data-prog-denominator="100">
+                      <div></div>
+                      <h6 class="progress-title">Engagement Score</h6>
+                    </div>
+                  </div><!-- radial-prog-area-->
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-md-2 col-sm-0">
+        </div> <!-- end right side -->
+      </div> <!-- end top -->
+      <div class="row p-0 m-0">
+        <div class="col-6 border-right bg-light">
+          <div class="row pt-2">
+            <div class="col-12 caption-input">
+              <div class="caption-textarea border">
+                <div class="form__group">
+                  {{ social_post_form.text }}
+                  <label for="id_social_post_form-text" class="form__label md-label">Caption...</label>
+                </div>
+              </div>
+            </div>
+          </div> <!-- end caption input row -->
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <div class="">
+              <div class="row">
+                <div id="parent">
+                    <div id="child"><h6>Select Platforms:</h6></div>
+                </div>
+              </div>
+              <div class="row" id="platform-select">
+                <div class="col-4 p-0">
+                  {{ social_post_form.instagram_post }}
+                  <div class="btn-group btn-sm btn-block">
+                    <label for="id_social_post_form-instagram_post" class="btn btn-success">
+                      <span class="fa fa-plus"></span>
+                      <span class="fa fa-minus"></span>
+                    </label>
+                    <label for="id_social_post_form-instagram_post" class="btn btn-outline-light active checkbox-btn">
+                      {{ social_post_form.instagram_post.label }}
+                    </label>
+                  </div>
+                </div>
+                <div class="col-4 p-0">
+                  {{ social_post_form.twitter_post }}
+                  <div class="btn-group btn-sm btn-block">
+                    <label for="id_social_post_form-twitter_post" class="btn btn-success">
+                      <span class="fa fa-plus"></span>
+                      <span class="fa fa-minus"></span>
+                    </label>
+                    <label for="id_social_post_form-twitter_post" class="btn btn-outline-light active checkbox-btn">
+                      {{ social_post_form.twitter_post.label }}
+                    </label>
+                  </div>
+                </div>
+                <div class="col-4 p-0">
+                  {{ social_post_form.facebook_post }}
+                  <div class="btn-group btn-sm btn-block">
+                    <label for="id_social_post_form-facebook_post" class="btn btn-success">
+                      <span class="fa fa-plus"></span>
+                      <span class="fa fa-minus"></span>
+                    </label>
+                    <label for="id_social_post_form-facebook_post" class="btn btn-outline-light active checkbox-btn">
+                      {{ social_post_form.facebook_post.label }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" id="create-post-row">
+              <div class="col ml-5 pl-5">
+                <div class="form__group">
+                  {{ social_post_promotion_form.budget }}
+                  <label for="id_social_post_promotion_form-budget" class="form__label md-label">Budget ($USD)</label>
+                </div>
+              </div>
+              <div class="col mr-5 pr-5">
+                  <div id="parent">
+                    <div id="child-btn">
+                      <button type="submit" class="btn btn-outline-success btn-xs">
+                        Schedule Post
+                      </button>
+                    </div>
+                  </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
     </div>
-
   </form>
 </div>
 
 {% endblock %}
 
 {% block footer %}
-<script src="{% static 'amplifai/js/discover.js' %}"></script>
+<script src="{% static 'amplifai/js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'amplifai/js/progressbar.min.js' %}"></script>
 <script src="{% static 'amplifai/js/social.js' %}"></script>
 {% endblock %}

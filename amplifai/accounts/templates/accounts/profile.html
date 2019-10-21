@@ -21,12 +21,11 @@
 {% endblock %}
 
 {% block body %}
-{% if user.userprofile.image %}
   <div class="profile-img-holder">
     <img src="{{ user.userprofile.banner.url }}" alt="" class="profile-img">
   </div>
   <div class="square" id="profile-image">
-    <img src="{{ user.userprofile.image.url }}" alt="" class="img-fluid">
+    <img src="{{ user.userprofile.image.url }}" alt="" class="img-fluid"  style="max-width: 100%;">
     <div class="edit">
       <button type="button" id="update-profile-btn" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#exampleModal">
         <i class="fa fa-pencil fa-lg"></i>
@@ -34,9 +33,8 @@
     </div>
   </div>
   <div class="" id="username">
-    <h2>{{ user.username }}</h2>
+    <h2> </h2>
   </div>
-{% endif %}
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -64,155 +62,280 @@
 </div>
 <!-- End Modal -->
 
+<div class="container border-bottom pt-5 pb-1 mb-2" id="profile-title">
+  <h2>{{ user.username }}'s Music</h2>
+</div>
+
 <div class="container">
   <section class="profile-section">
-    <!-- add new album row -->
-    <div class="row" id=add-new-album-row>
-      <div class="add-new-album-button">
-        <p><a class="btn btn-outline-secondary" data-toggle="collapse" href="#collapseAddAlbumForm" role="button" aria-expanded="false" aria-controls="collapseAddAlbumForm"><i class="fas fa-user-edit"></i>Add New Album</a></p>
-      </div>
-      {% if album_form_error %}
-      <div class="collapse show col-12" id="collapseAddAlbumForm">
-      {% else %}
-      <div class="collapse col-12" id="collapseAddAlbumForm">
-      {% endif %}
-        <div class="card card-body add-new-album-card shadow p-3 mb-5 bg-white rounded">
-          {% if error_message %}
-          <p><strong>{{ error_message }}</strong></p>
-          {% endif %}
-          <form id="create-album-form" class="form-horizontal" role="form" action="{% url 'accounts:profile' pk=user.pk %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {% include 'accounts/album_form_template.html' %}
-            <input type='hidden' id="post-type" name="post-type" value="album" />
-            <div class="form-group">
-              <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-outline-success">Submit</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    <!-- and add new album row -->
 
-    <!-- album card rows -->
-    <!-- <div class="container album-list" id="module"> -->
-    {% for album in user_details.user.albums.all reversed %}
-    <a id="album-card-{{ album.pk }}"></a>
-    <div class="row album-list-row shadow p-3 mb-5 bg-white rounded" id="album-card-{{ forloop.counter }}">
-      <!-- album infor row -->
-      <div class="row">
-        <!-- Left Album Info -->
-        <div class="col-lg-4 col-md-12">
-          <div class="card album-card">
-            <h5 class="card-header">{{ album.album_title }}</h5>
-            <div class="card-body">
-              <img src="{{ album.album_logo.url }}" class="img-fluid" alt="{% static 'amplifai/vinyl.png' %}">
-            </div>
-            <div class="delete-album-btn">
-              <form id="delete-album-form-{{ forloop.counter }}" class="delete-album-form" action="{% url 'accounts:delete_album'%}" method="POST" style="display: inline;">
+    <!-- single card rows -->
+    <div class="row pt-5 mt-5">
+      <!-- add new album row -->
+      <div class="col-12 pt-3 pb-3">
+        <div class="row pt-3" id="add-new-album-row">
+          <div class="add-new-album-button">
+            <p><h4>Singles</h4><a class="btn btn-outline-secondary" data-toggle="collapse" href="#collapseAddSingleForm" role="button" aria-expanded="false" aria-controls="collapseAddSingleForm">Add New Single</a></p>
+          </div>
+          {% if album_form_error %}
+          <div class="collapse show col-12" id="collapseAddSingleForm">
+          {% else %}
+          <div class="collapse col-12" id="collapseAddSingleForm">
+          {% endif %}
+            <div class="card card-body add-new-album-card shadow-sm p-3 mb-5 bg-white rounded">
+              {% if error_message %}
+              <p><strong>{{ error_message }}</strong></p>
+              {% endif %}
+              <form id="create-album-form" class="form-horizontal" role="form" action="{% url 'accounts:profile' pk=user.pk %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="hidden" name="album-pk" id="delete-album-pk" value="{{ album.pk }}" />
-                <button type="submit" class="btn btn-outline-danger btn-xs">
-                  Delete Album
-                </button>
+                {% include 'accounts/album_form_template.html' %}
+                <input type='hidden' id="post-type" name="post-type" value="album"/>
+                <div class="form-group">
+                  <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-outline-success">Submit</button>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
         </div>
-
-        <!-- Right Song Info -->
-        <div class="col-lg-8 col-md-12">
-          <div class="card">
-            <div class="card-body">
+      </div>
+      <!-- and add new album row -->
+      {% for album in user_details.user.albums.all reversed %}
+        {% if album.is_song %}
+          <a id="album-card-{{ album.pk }}"></a>
+          <div class="col-md-4 col-sm-12" id="album-card-{{ forloop.counter }}">
+            <div class="card p-0 m-2 bg-white border shadow-sm">
+              <div class="square-image">
+                  <img src="{{ album.album_logo.url }}" class="img-fluid" style="max-width: 100%;">
+              </div>
+              <div class="card-text-container">
+                <div class="col p-0 h-100">
+                  <div class="row p-0 h-100">
+                    <div class="col-2"><span></span></div>
+                    <div class="col-8 p-0">
+                      <table style="height: 100%; width:100%;">
+                        <tbody>
+                          <tr>
+                            <td class="align-middle text-center">
+                              <h5>{{ album.album_title }}</h5>
+                              {% for song in album.songs.all %}
+                                <form id="analyze-song-form-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="analyze-song-form" action="{% url 'accounts:analyze_song' %}" method="POST" style="display: inline;">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="song-pk" id="analyze-song-pk" value="{{ song.pk }}" />
+                                  {% if song.is_favorite %}
+                                  <button type="submit" class="btn btn-success btn-sm">
+                                  {% else %}
+                                  <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                  {% endif %}
+                                    {% if song.is_favorite %}
+                                    <span>Analyze On</span>
+                                    {% else %}
+                                    <span>Analyze Off</span>
+                                    {% endif %}
+                                  </button>
+                                </form>
+                              {% endfor %}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-2">
+                      <!-- dropdown -->
+                      <div class="dropdown show text-right pr-3 pt-2">
+                        <a class="elipsis-icon dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fa fa-ellipsis-h"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                          <div class="">
+                            <form id="delete-album-form-{{ forloop.counter }}" class="delete-album-form" action="{% url 'accounts:delete_album'%}" method="POST" style="display: inline;">
+                              {% csrf_token %}
+                              <input type="hidden" name="album-pk" id="delete-album-pk" value="{{ album.pk }}" />
+                              <a class="dropdown-item" href="javascript: submitform()">Delete Single</a>
+                            </form>
+                          </div>
+                          <a class="dropdown-item" href="#">Update Single</a>
+                        </div>
+                      </div>
+                      <!-- end dropdown -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <!-- albums section -->
+    <div class="row">
+      <!-- add new album row -->
+      <div class="col mt-5 pt-3 pb-3 border-top">
+        <div class="row pt-3" id="add-new-album-row">
+          <div class="add-new-album-button">
+            <p>
+              <h4>Albums</h4>
+              <a class="btn btn-outline-secondary" data-toggle="collapse" href="#collapseAddAlbumForm" role="button" aria-expanded="false" aria-controls="collapseAddAlbumForm">
+                Add New Album
+              </a>
+            </p>
+          </div>
+          {% if album_form_error %}
+          <div class="collapse show col-12" id="collapseAddAlbumForm">
+          {% else %}
+          <div class="collapse col-12" id="collapseAddAlbumForm">
+          {% endif %}
+            <div class="card card-body add-new-album-card shadow-sm p-3 mb-5 bg-white rounded">
               {% if error_message %}
               <p><strong>{{ error_message }}</strong></p>
               {% endif %}
-              <table class="table">
-                <tbody class=mejs-table-body>
-                  {% for song in album.songs.all %}
-                  <tr scope="row" class="row">
-                    <td class="song-name-item col-4" data-audio-src="{{ song.audio_file.url }}"><span>{{ song.song_title }}</span></td>
-                    <td class="col-4">
-                      <form id="analyze-song-form-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="analyze-song-form" action="{% url 'accounts:analyze_song' %}" method="POST" style="display: inline;">
-                        {% csrf_token %}
-                        <input type="hidden" name="song-pk" id="analyze-song-pk" value="{{ song.pk }}" />
-                        {% if song.is_favorite %}
-                        <button type="submit" class="btn btn-success btn-small">
-                        {% else %}
-                        <button type="submit" class="btn btn-outline-secondary btn-small">
-                        {% endif %}
-                          {% if song.is_favorite %}
-                          <span>Analyze On</span>
-                          {% else %}
-                          <span>Analyze Off</span>
-                          {% endif %}
-                        </button>
-                      </form>
-                    </td>
-                    <td class="col-4">
-                      <form id="delete-song-form-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="delete-song-form" action="{% url 'accounts:delete_song'%}" method="POST" style="display: inline;">
-                        {% csrf_token %}
-                        <input type="hidden" name="delete-song-pk-{{ song.pk }}" id="delete-song-pk" value="{{ song.pk }}" />
-                        <button type="submit" class="btn btn-outline-danger btn-small">
-                          <span>Delete</span>
-                        </button>
-                      </form>
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+              <form id="create-album-form" class="form-horizontal" role="form" action="{% url 'accounts:profile' pk=user.pk %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% include 'accounts/album_form_template.html' %}
+                <input type='hidden' id="post-type" name="post-type" value="album" />
+                <div class="form-group">
+                  <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-outline-success">Submit</button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-        <!-- end right side info -->
       </div>
-      <!-- end album info row -->
-
-      <!-- add song form -->
-      <div class="container">
-        {% if song_form_error_album_pk == album.pk %}
-        <div class=" collapse show col-sm-12" id="collapseAlbumCard{{ album.pk }}">
-        {% else %}
-        <div class=" collapse col-sm-12" id="collapseAlbumCard{{ album.pk }}">
-        {% endif %}
-          <a id="album-card-error-{{ album.pk }}"></a>
-          <div class="card card-body">
-            {% if error_message %}
-            <p><strong>{{ error_message }}</strong></p>
-            {% endif %}
-            <form id="add-song-form-{{ forloop.counter }}" class="form-horizontal add-song-form" role="form" action="{% url 'accounts:profile' pk=user.pk %}" data-type="song" method="POST" enctype="multipart/form-data">
-              {% csrf_token %}
-              {% include 'accounts/song_form_template.html' %}
-              <div id="results"></div> <!-- errors go here -->
-              <input type='hidden' id="album-pk" name="album-pk" value="{{ album.pk }}" />
-              <input type='hidden' id="post-type" name="post-type" value="song" />
-              <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                  <button type="submit" class="btn btn-outline-success song-form-submit-btn btn-small">Submit</button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <!-- end add song form -->
-
-      <!-- add song button -->
-      <div class="col-sm-12 add-song-btn-div">
-          <p class="add-song-button-p">
-            <a class="add-song-button" data-toggle="collapse" href="#collapseAlbumCard{{ album.id }}" role="button" aria-expanded="false" aria-controls="collapseAlbumCard{{ album.id }}"">
-              Add New Song<br>
-              <span class=" arrow"><span></span><span></span></span>
-            </a>
-          </p>
-      </div>
-      <!-- end add song button -->
-
+      <!-- and add new album row -->
     </div>
-    <!-- end album list row -->
-    {% endfor %}
+      {% for album in user_details.user.albums.all reversed %}
+        {% if not album.is_song %}
+          <div class="row mb-3">
+            <div class="col-12">
+              <a id="album-card-{{ album.pk }}"></a>
+              <div class="row album-list-row shadow-sm p-0 m-2 bg-white" id="album-card-{{ forloop.counter }}">
+                <!-- left side info -->
+                <div class="col-lg-4 col-md-12 pr-0 pl-0 border-right">
+                  <div class="card bg-white p-0">
+                    <div class="square-image">
+                      <img src="{{ album.album_logo.url }}" class="img-fluid"  style="max-width: 100%;">
+                    </div>
+                  </div>
+                </div>
+                <!-- end left side info -->
+
+                <!-- right side info -->
+                <div class="col-lg-8 col-md-12">
+                  <div class="card h-100">
+                    <div class="card-header bg-white">
+                      <div class="row">
+                        <div class="col-10">
+                          <h5>{{ album.album_title }}</h5>
+                        </div>
+                        <div class="col-2">
+                          <div class="dropdown show text-center">
+                            <a class="elipsis-icon dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fa fa-ellipsis-h"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                              <a class="dropdown-item" data-toggle="collapse" href="#collapseAlbumCard{{ album.id }}" role="button" aria-expanded="false" aria-controls="collapseAlbumCard{{ album.id }}"">Add Song</a>
+                              <div class="">
+                                <form id="delete-album-form-{{ forloop.counter }}" class="delete-album-form" action="{% url 'accounts:delete_album'%}" method="POST" style="display: inline;">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="album-pk" id="delete-album-pk" value="{{ album.pk }}" />
+                                  <a class="dropdown-item" href="javascript: submitform()">Delete Album</a>
+                                </form>
+                              </div>
+                              <a class="dropdown-item" href="#">Update Album</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div> <!-- end card header -->
+                    <div class="card-body overflow-auto">
+                      {% if error_message %}
+                      <p><strong>{{ error_message }}</strong></p>
+                      {% endif %}
+                      <table style="height: 100%; width:100%;">
+                        <tbody>
+                          {% for song in album.songs.all %}
+                          <tr scope="row" class="row mb-2">
+                            <td class="song-name-item col-5 data-audio-src="{{ song.audio_file.url }}"><span>{{ song.song_title }}</span></td>
+                            <td class="col-5">
+                              <form id="analyze-song-form-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="analyze-song-form" action="{% url 'accounts:analyze_song' %}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="song-pk" id="analyze-song-pk" value="{{ song.pk }}"/>
+                                {% if song.is_favorite %}
+                                <button type="submit" class="btn btn-success btn-sm">
+                                {% else %}
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                {% endif %}
+                                  {% if song.is_favorite %}
+                                  <span>Analyze On</span>
+                                  {% else %}
+                                  <span>Analyze Off</span>
+                                  {% endif %}
+                                </button>
+                              </form>
+                            </td>
+                            <td class="col-2">
+                              <div class="dropdown show text-center">
+                                <a class="elipsis-icon dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fa fa-ellipsis-h"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                  <a class="dropdown-item" href="#">Update Song</a>
+                                  <div class="">
+                                    <form id="delete-song-form-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="delete-song-form" action="{% url 'accounts:delete_song'%}" method="POST" style="display: inline;">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="delete-song-pk-{{ song.pk }}" id="delete-song-pk" value="{{ song.pk }}" />
+                                      <a class="dropdown-item" href="javascript: submitform()">Delete Song</a>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <!-- end right side info -->
+
+                <!-- add song form -->
+                <div class="container">
+                  {% if song_form_error_album_pk == album.pk %}
+                  <div class="collapse show col-sm-12" id="collapseAlbumCard{{ album.pk }}">
+                  {% else %}
+                  <div class="collapse col-sm-12" id="collapseAlbumCard{{ album.pk }}">
+                  {% endif %}
+                    <a id="album-card-error-{{ album.pk }}"></a>
+                    <div class="card card-body">
+                      {% if error_message %}
+                      <p><strong>{{ error_message }}</strong></p>
+                      {% endif %}
+                      <form id="add-song-form-{{ forloop.counter }}" class="form-horizontal add-song-form" role="form" action="{% url 'accounts:profile' pk=user.pk %}" data-type="song" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% include 'accounts/song_form_template.html' %}
+                        <div id="results"></div> <!-- errors go here -->
+                        <input type='hidden' id="album-pk" name="album-pk" value="{{ album.pk }}" />
+                        <input type='hidden' id="post-type" name="post-type" value="song" />
+                        <div class="form-group">
+                          <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-outline-success song-form-submit-btn btn-sm">Submit</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <!-- end add song form -->
+              </div>
+            </div>
+          </div> <!-- end album list outer row -->
+        {% endif %}
+      {% endfor %}
+    </div>
   </section>
 </div>
 {% endblock %}

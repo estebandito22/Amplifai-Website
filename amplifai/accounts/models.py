@@ -55,6 +55,7 @@ class Album(models.Model):
     album_title = models.CharField(max_length=500)
     album_logo = models.FileField(upload_to=user_directory_path, validators=[validate_image])
     is_favorite = models.BooleanField(default=False)
+    is_song = models.BooleanField(default=False)
 
     def __str__(self):
         return self.album_title + ' - ' + self.user.username

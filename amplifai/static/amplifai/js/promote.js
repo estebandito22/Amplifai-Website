@@ -56,7 +56,7 @@ function enableLinearProgress(){
       // progPercent = $this.data('prog-percent');
       // console.log(progPercent)
 
-		var bar = new ProgressBar.SemiCircle(this, {
+		var bar = new ProgressBar.Line(this, {
 			color: '#aaa',
 			strokeWidth: 4,
 			trailWidth: 2,
@@ -76,7 +76,7 @@ function enableLinearProgress(){
 				if (value === 0) {
 					circle.setText('-');
 				} else {
-          circle.setText(value);
+          circle.setText(kFormatter(value));
 				}
         // circle.setText(value);
 
@@ -99,7 +99,7 @@ function enableLinearMinMaxProgress(){
       progMin = $this.data('prog-min'),
       progPercent = 1 - (progNumerator-progMin)/progDenominator;
 
-		var bar = new ProgressBar.SemiCircle(this, {
+		var bar = new ProgressBar.Line(this, {
 			color: '#aaa',
 			strokeWidth: 4,
 			trailWidth: 2,
@@ -139,4 +139,8 @@ function isExists(elem){
 		return true;
 	}
 	return false;
+}
+
+function kFormatter(num) {
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
 }

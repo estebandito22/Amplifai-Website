@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load app_filters %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="navbar border-bottom justify-content-center shadow-sm">
+  <nav aria-label="Page navigation example">
+    <ul class="pagination mb-0">
+      {% if social_post.pk == prev_social_post_pk %}
+        <li class="page-item disabled">
+      {% else %}
+        <li class="page-item">
+      {% endif %}
+          <a class="page-link" href="{% url 'social:promote_details' pk=user.pk social_post_pk=prev_social_post_pk %}" tabindex="-1">Previous</a>
+        </li>
+        {% if social_post.pk == next_social_post_pk %}
+          <li class="page-item disabled">
+        {% else %}
+          <li class="page-item">
+        {% endif %}
+          <a class="page-link" href="{% url 'social:promote_details' pk=user.pk social_post_pk=next_social_post_pk %}">Next</a>
+        </li>
+    </ul>
+  </nav>
+</div>
+<div class="container pt-5">
+  <div class="row">
+    <div class="col-12 mb-5 pb-5">
+      <div class="row mb-4 h-100 mr-2 ml-1">
+        <!-- left side info -->
+        <div class="col-lg-4 col-md-12 pr-0 pl-0 border">
+          <div class="card bg-light p-0 social-post-card h-100">
+            <div class="card-body p-0">
+              <div class="square-image">
+                <img src="{{ social_post.media.url }}" alt="" class="img-fluid">
+              </div>
+              <div class="social-post-text-area">
+                <p>{{ social_post.text }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end left side info -->
+
+        <!-- right side info -->
+        <div class="col-lg-8 col-md-12 p-0">
+          <div class="card h-100">
+            <div class="card-body pt-4 pb-3 h-100">
+              <div class="row h-100">
+                <div class="col-6 organic-col">
+                  <div class="row pl-3 pb-2 pt-2">
+                    <h5>Organic</h5>
+                  </div>
+                  <div class="row">
+                    <div class="linear-prog-area">
+                      <div class="linear-progress linear-absolute-progress" data-prog-numerator="{{ social_post.twitter_followers|add:social_post.instagram_followers|add:social_post.facebook_followers }}" data-prog-denominator="{{ max_followers.followers_sum__max }}"">
+                        <div></div>
+                        <h6 class="progress-title">Followers</h6>
+                      </div>
+                    </div><!-- linear-prog-area-->
+                  </div>
+                  <div class="row">
+                    <div class="linear-prog-area">
+                      <div class="linear-progress linear-absolute-progress" data-prog-numerator="{{ social_post.twitter_engagements|add:social_post.instagram_engagements|add:social_post.facebook_engagements }}" data-prog-denominator="{{ max_engagements.engagements_sum__max }}"">
+                        <div></div>
+                        <h6 class="progress-title">Engagements</h6>
+                      </div>
+                    </div><!-- linear-prog-area-->
+                  </div>
+                  <div class="row pl-3 pb-2 pt-2">
+                    <h5>Paid</h5>
+                  </div>
+                  <div class="row">
+                    <div class="linear-prog-area">
+                      <div class="linear-progress linear-absolute-progress" data-prog-numerator="{{ paid_followers }}" data-prog-denominator="{{ max_paid_followers }}"">
+                        <div></div>
+                        <h6 class="progress-title">Followers</h6>
+                      </div>
+                    </div><!-- linear-prog-area-->
+                  </div>
+                  <div class="row">
+                    <div class="linear-prog-area">
+                      <div class="linear-progress linear-absolute-progress" data-prog-numerator="{{ paid_engagements }}" data-prog-denominator="{{ max_paid_engagements }}"">
+                        <div></div>
+                        <h6 class="progress-title">Engagements</h6>
+                      </div>
+                    </div><!-- linear-prog-area-->
+                  </div>
+                  <div class="row">
+                    <div class="linear-prog-area">
+                      <div class="linear-progress linear-minmax-progress" data-prog-numerator="{{ cpf }}" data-prog-denominator="{{ max_min_cpf }}" data-prog-min="{{ min_cpf }}">
+                        <div></div>
+                        <h6 class="progress-title">Cost/Follower</h6>
+                      </div>
+                    </div><!-- linear-prog-area-->
+                  </div>
+                  <div class="row">
+                    <div class="linear-prog-area">
+                      <div class="linear-progress linear-minmax-progress" data-prog-numerator="{{ cpe }}" data-prog-denominator="{{ max_min_cpe }}" data-prog-min="{{ min_cpe }}">
+                        <div></div>
+                        <h6 class="progress-title">Cost/Engagement</h6>
+                      </div>
+                    </div><!-- linear-prog-area-->
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="row pl-3 pb-3 pt-2">
+                    <h5>Manage Post Budget</h5>
+                  </div>
+                  <div>
+                    <div class="card-body stats-card">
+                      <div class="row">
+                        <div class="col-12">
+                          <table style="width: 100%; height: 100%;">
+                            <tbody>
+                              <tr>
+                                <td><h6>Total Budget:</h6></td><td><h6>${{ total_budget }}</h6></td>
+                              </tr>
+                              <tr>
+                                <td><h6>Total Spend:</h6></td><td><h6>${{ total_spend }}</h6></td>
+                              </tr>
+                              <tr>
+                                <td><h6>Remaining Budget:</h6></td><td><h6>${{ total_budget|subtract:total_spend }}</h6></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="col-12 pl-5 pr-5 pt-1">
+                          <form class="form-horizontal" action="{% url 'social:promote' pk=user.pk %}" method="POST" enctype="multipart/form-data">
+                            <div class="row mb-4 mt-3">
+                              <div class="form__group w-100">
+                                {{ social_post_promotion_form.budget }}
+                                <label for="id_social_post_promotion_form-budget" class="form__label md-label">Add Budget ($USD)</label>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div id="parent">
+                                <div id="child-btn" class="text-left">
+                                  <button type="submit" class="btn btn-outline-success btn-xs">
+                                    Promote Post
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> <!-- end promotion post accordion -->
+        </div><!-- end right side info -->
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script src="{% static 'amplifai/js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'amplifai/js/progressbar.min.js' %}"></script>
+<script src="{% static 'amplifai/js/promote.js' %}"></script>
+{% endblock %}

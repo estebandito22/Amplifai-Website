@@ -6,16 +6,16 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
+<!-- <div class="container pt-4">
   <div class="jumbotron jumbotron-fluid bg-white border-bottom">
     <div class="container">
       <h1 class="display-4">Connect</h1>
-      <p class="lead">Connect with social media influencers, playlist curators <br>
-        and music bloggers who are interested in your music.</p>
+      <p class="lead">Connect with social media influencers, playlist <br>
+        curators and music bloggers who are interested in your music.</p>
     </div>
   </div>
-</div>
-<div class="container pt-4">
+</div> -->
+<div class="container pt-5">
   <div class="pl-3 pb-3">
     <h4>Latest</h4>
   </div>
@@ -23,13 +23,14 @@
     {% for influencer in latest_influencers %}
       {% if forloop.counter0 == 0 %}
         <div class="col-12 mb-5 pb-5 border-bottom">
-          <div class="row mb-4 h-100 mr-2 ml-1 shadow border">
+          <div class="row mb-4 h-100 mr-2 ml-1 shadow-sm border">
             <!-- left side info -->
             <div class="col-lg-4 col-md-12 pr-0 pl-0 border-right">
               <div class="card bg-white p-0 influencer-card">
-                <div class="card-body text-center p-0">
-                  <div class="card-image-container">
-                    <img src="{{ influencer.0.twitter_profile_picture.url }}" alt="" class="">
+                <div class="card-body p-0">
+                  <!-- <div class="card-image-container"> -->
+                  <div class="fill h-100">
+                    <img src="{{ influencer.0.twitter_profile_picture.url }}" alt="" class="img-fluid">
                   </div>
                 </div>
               </div>
@@ -39,8 +40,11 @@
             <!-- right side info -->
             <div class="col-lg-8 col-md-12 pr-0 pl-0">
               <div class="card h-100">
+                <span class="influencer-info-icon">
+                  <a href="{% url 'discover:influencer_details' pk=user.pk influencer_pk=influencer.0.pk %}"><i class="fa fa-lg fa-info-circle"></i></a>
+                </span>
                 <div class="card-body">
-                  <div class="row h-50 mt-4">
+                  <div class="row h-50 mt-3">
                     <div class="col-4">
                       <div class="radial-prog-area">
                         <div class="radial-progress radial-progress-bottom" data-prog-numerator="{{ influencer.0.followers_count }}" data-prog-denominator="{{ max_followers_count.followers_count__max }}"">
@@ -71,13 +75,13 @@
                                 <td class="align-middle text-center">
                                   {% if influencer.1 %}
                                     <!-- <a href="{% url 'discover:direct_messages' pk=user.pk thread_pk=influencer.1.pk %}" class="direct-message-btn">Direct Message <i class="fa fa-paper-plane"></i></a> -->
-                                    <button href="{% url 'discover:direct_messages' pk=user.pk thread_pk=influencer.1.pk %}" class="btn btn-outline-secondary btn-sm">Direct Message <i class="fa fa-paper-plane"></i></button>
+                                    <a href="{% url 'discover:direct_messages' pk=user.pk thread_pk=influencer.1.pk %}" class="btn btn-outline-secondary btn-sm">Direct Message <i class="fa fa-paper-plane"></i></a>
                                   {% else %}
                                     <form id="direct_message_form" class="form-horizontal" action="{% url 'discover:influencers' pk=user.pk %}" method="POST" enctype="multipart/form-data">
                                       {% csrf_token %}
                                       <input type="hidden" name="influencer" id="id_influencer" value="{{ influencer.0.pk }}">
                                       <!-- <a class="direct-message-btn" href="javascript:{}" onclick="document.getElementById('direct_message_form').submit();">Direct Message <i class="fa fa-paper-plane"></i></a> -->
-                                     <button type="submit" class="btn btn-outline-secondary btn-sm">Direct Message <i class="fa fa-paper-plane"></i></button>
+                                      <button type="submit" class="btn btn-outline-secondary btn-sm">Direct Message<i class="fa fa-paper-plane"></i></button>
                                     </form>
                                   {% endif %}
                                 </td>
@@ -123,13 +127,13 @@
         </div>
       {% else %}
         <div class="col-6">
-          <div class="row mb-4 h-100 mr-2 ml-1 shadow border">
+          <div class="row mb-4 h-100 mr-2 ml-1 shadow-sm border">
             <!-- left side info -->
             <div class="col-md-6 col-sm-12 pr-0 pl-0 border-right">
               <div class="card bg-white p-0 influencer-card">
-                <div class="card-body text-center p-0">
-                  <div class="card-image-container">
-                    <img src="{{ influencer.0.twitter_profile_picture.url }}" alt="" class="">
+                <div class="card-body p-0">
+                  <div class="fill h-100">
+                    <img src="{{ influencer.0.twitter_profile_picture.url }}" alt="" class="img-fluid">
                   </div>
                 </div>
               </div>
@@ -140,7 +144,7 @@
             <div class="col-md-6 col-sm-12 pr-0 pl-0">
               <div class="card h-100">
                 <span class="influencer-info-icon">
-                  <i class="fa fa-lg fa-info-circle"><a href="#"></a></i>
+                  <a href="{% url 'discover:influencer_details' pk=user.pk influencer_pk=influencer.0.pk %}"><i class="fa fa-lg fa-info-circle"></i></a>
                 </span>
                 <div class="card-body pt-2 pr-2 pl-2 pb-1">
                   <div class="col h-100">
@@ -164,7 +168,7 @@
                             <td class="align-middle text-center">
                               {% if influencer.1 %}
                                 <!-- <a href="{% url 'discover:direct_messages' pk=user.pk thread_pk=influencer.1.pk %}" class="direct-message-btn">Direct Message <i class="fa fa-paper-plane"></i></a> -->
-                                <button href="{% url 'discover:direct_messages' pk=user.pk thread_pk=influencer.1.pk %}" class="btn btn-outline-secondary btn-sm">Direct Message <i class="fa fa-paper-plane"></i></button>
+                                <a href="{% url 'discover:direct_messages' pk=user.pk thread_pk=influencer.1.pk %}" class="btn btn-outline-secondary btn-sm">Direct Message <i class="fa fa-paper-plane"></i></a>
                               {% else %}
                                 <form id="direct_message_form" class="form-horizontal" action="{% url 'discover:influencers' pk=user.pk %}" method="POST" enctype="multipart/form-data">
                                   {% csrf_token %}

@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+<link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,800,900" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block body %}
+<div class="navbar border-bottom justify-content-center shadow-sm">
+  <nav aria-label="Page navigation example">
+    <ul class="pagination mb-0">
+      {% if influencer.pk == prev_influencer_pk %}
+        <li class="page-item disabled">
+      {% else %}
+        <li class="page-item">
+      {% endif %}
+          <a class="page-link" href="{% url 'discover:influencer_details' pk=user.pk influencer_pk=prev_influencer_pk %}" tabindex="-1">Previous</a>
+        </li>
+        {% if influencer.pk == next_influencer_pk %}
+          <li class="page-item disabled">
+        {% else %}
+          <li class="page-item">
+        {% endif %}
+          <a class="page-link" href="{% url 'discover:influencer_details' pk=user.pk influencer_pk=next_influencer_pk %}">Next</a>
+        </li>
+    </ul>
+  </nav>
+</div>
+<div class="container pt-5">
+  <div class="row border-bottom">
+    <div class="col-12 mb-5 pb-5">
+      <div class="row mb-4 h-100 mr-2 ml-1">
+        <!-- left side info -->
+        <div class="col-lg-4 col-md-12 pr-0 pl-0 border shadow">
+          <div class="card bg-white p-0 influencer-card">
+            <div class="card-body p-0">
+              <!-- <div class="card-image-container"> -->
+              <div class="fill h-100">
+                <img src="{{ influencer.twitter_profile_picture.url }}" alt="" class="img-fluid">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end left side info -->
+
+        <!-- right side info -->
+        <div class="col-lg-8 col-md-12 pr-0 pl-0">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="row h-50 mt-3">
+                <div class="col-4">
+                  <div class="radial-prog-area">
+                    <div class="radial-progress radial-progress-bottom" data-prog-numerator="{{ influencer.followers_count }}" data-prog-denominator="{{ max_followers_count.followers_count__max }}"">
+                      <div></div>
+                      <h6 class="progress-title">Followers Count</h6>
+                    </div>
+                  </div><!-- radial-prog-area-->
+                </div>
+                <div class="col-4">
+                  <div class="radial-prog-area">
+                    <div class="radial-progress radial-progress-bottom" data-prog-numerator="{{influencer.tweet_count }}" data-prog-denominator="{{ max_tweet_count.tweet_count__max }}">
+                      <div></div>
+                      <h6 class="progress-title">Tweet Count</h6>
+                    </div>
+                  </div><!-- radial-prog-area-->
+                </div>
+                <div class="col-4">
+                  <div class="row">
+                    <h5 class="text-center" style="width: 100%;">{{ influencer.first_name}} {{ influencer.last_name }}</h5>
+                  </div>
+                  <div class="row">
+                    <h6 class="text-center" style="width: 100%;">@{{ influencer.twitter_handle }}</h6>
+                  </div>
+                  <div class="row">
+                      <table style="height: 100%; width:100%;">
+                        <tbody>
+                          <tr>
+                            <td class="align-middle text-center">
+                              {% if influencer_thread %}
+                                <a href="{% url 'discover:direct_messages' pk=user.pk thread_pk=influencer_thread.pk %}" class="btn btn-outline-secondary btn-sm">Direct Message <i class="fa fa-paper-plane"></i></a>
+                              {% else %}
+                                <form id="direct_message_form" class="form-horizontal" action="{% url 'discover:influencer_details' pk=user.pk influencer_pk=influencer.pk %}" method="POST" enctype="multipart/form-data">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="influencer" id="id_influencer" value="{{ influencer.pk }}">
+                                  <button type="submit" class="btn btn-outline-secondary btn-sm">Direct Message<i class="fa fa-paper-plane"></i></button>
+                                </form>
+                              {% endif %}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                  </div>
+                </div>
+              </div>
+              <div class="row h-50 mt-2">
+                <div class="col-4">
+                  <div class="radial-prog-area">
+                    <div class="radial-progress radial-progress-bottom" data-prog-numerator="{{ influencer.influence_ratio }}" data-prog-denominator="{{ max_influence_ratio.influence_ratio__max }}">
+                      <div></div>
+                      <h6 class="progress-title">Influence Ratio</h6>
+                    </div>
+                  </div><!-- radial-prog-area-->
+                </div>
+                <div class="col-4">
+                  <div class="radial-prog-area">
+                    <div class="radial-progress radial-progress-bottom" data-prog-numerator="{{ influencer.viral_ratio}}" data-prog-denominator="{{ max_viral_ratio.viral_ratio__max }}">
+                      <div></div>
+                      <h6 class="progress-title">Viral Ratio</h6>
+                    </div>
+                  </div><!-- radial-prog-area-->
+                </div>
+                <div class="col-4">
+                  <div class="radial-prog-area">
+                    <div class="radial-progress radial-progress-bottom" data-prog-numerator="{{ influencer.engagement_ratio }}" data-prog-denominator="{{ max_engagement_ratio.engagement_ratio__max }}">
+                      <div></div>
+                      <h6 class="progress-title">Engagement Ratio</h6>
+                    </div>
+                  </div><!-- radial-prog-area-->
+                </div>
+              </div>
+            </div> <!-- end card boddy -->
+          </div> <!-- end card -->
+        </div> <!-- end right side info -->
+      </div> <!-- end influencer card holder -->
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="row">
+        <div class="pt-4 pl-3" style="display: inline;">
+          <h2>Interests: </h2>
+          <h4>
+            {% for topic in influencer.socialtopic_set.all %}
+              {% if topic == influencer.socialtopic_set.last %}
+                {{ topic }}
+              {% else %}
+                {{ topic }},
+              {% endif %}
+            {% endfor %}
+          </h4>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+  <script src="{% static 'amplifai/js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'amplifai/js/progressbar.min.js' %}"></script>
+  <script src="{% static 'amplifai/js/discover.js' %}"></script>
+
+{% endblock %}

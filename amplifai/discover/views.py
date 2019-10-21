@@ -88,18 +88,15 @@ class DirectMessageThreadCreateView(SingleObjectMixin, FormView):
             'discover:direct_messages', kwargs={'pk': self.request.user.pk, 'thread_pk': self.thread_pk}))
 
     def form_valid(self, form):
-        print("HERE!!")
         obj = form.save(commit=False)
         obj.user = self.request.user
         influencer_pk = self.request.POST.get('influencer')
         obj.influencer = models.Influencer.objects.get(pk=influencer_pk)
         obj.save()
         self.thread_pk = obj.pk
-        print(self.thread_pk)
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        print(form.errors)
         return self.render_to_response(self.get_context_data())
 
 
@@ -111,6 +108,139 @@ class InfluencersView(View):
 
     def post(self, request, *args, **kwargs):
         view = DirectMessageThreadCreateView.as_view()
+        return view(request, *args, **kwargs)
+
+
+class SingleInfluencerDetailView(DetailView):
+    template_name = "discover/influencer_details.html"
+    context_object_name = 'user_details'
+    model = models.User
+    dm_thread_form = None
+    influencer_pk = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        prev_influencer = self.object.influencer_set.filter(
+            pk__lt=self.influencer_pk).order_by('pk').last()
+        next_influencer = self.object.influencer_set.filter(
+            pk__gt=self.influencer_pk).order_by('pk').first()
+
+        influencer = models.Influencer.objects.get(pk=self.influencer_pk)
+        influencer_thread = influencer.directmessagethread_set.filter(
+            user__pk__contains=self.request.user.pk).first()
+
+        context['influencer'] = influencer
+        context['influencer_thread'] = influencer_thread
+
+        context['influencer_pk'] = int(influencer.pk)
+
+        if prev_influencer is not None:
+            context['prev_influencer_pk'] = prev_influencer.pk
+        else:
+            context['prev_influencer_pk'] = int(self.influencer_pk)
+
+        if next_influencer is not None:
+            context['next_influencer_pk'] = next_influencer.pk
+        else:
+            context['next_influencer_pk'] = int(self.influencer_pk)
+
+        context['max_followers_count'] = models.Influencer.objects.all(
+            ).aggregate(Max('followers_count'))
+        context['max_tweet_count'] = models.Influencer.objects.all(
+            ).aggregate(Max('tweet_count'))
+        context['max_influence_ratio'] = models.Influencer.objects.all(
+            ).aggregate(Max('influence_ratio'))
+        context['max_viral_ratio'] = models.Influencer.objects.all(
+            ).aggregate(Max('viral_ratio'))
+        context['max_engagement_ratio'] = models.Influencer.objects.all(
+            ).aggregate(Max('engagement_ratio'))
+
+        if self.dm_thread_form is not None:
+            context['dm_thread_form'] = self.dm_thread_form
+        else:
+            context['dm_thread_form'] = forms.DirectMessageThreadForm
+
+        print(context)
+
+        return context
+
+
+class SingleInfluencerDirectMessageThreadCreateView(SingleObjectMixin, FormView):
+    template_name = "discover/influencer_details.html"
+    form_class = forms.DirectMessageThreadForm
+    context_object_name = 'user_details'
+    model = models.User
+    dm_thread_form = None
+    influencer_pk = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        prev_influencer = self.object.influencer_set.filter(
+            pk__lt=self.influencer_pk).order_by('pk').last()
+        next_influencer = self.object.influencer_set.filter(
+            pk__gt=self.influencer_pk).order_by('pk').first()
+
+        context['influencer'] = models.Influencer.objects.get(pk=self.influencer_pk)
+
+        if prev_influencer is not None:
+            context['prev_influencer_pk'] = prev_influencer.pk
+        else:
+            context['prev_influencer_pk'] = self.influencer_pk
+
+        if next_influencer is not None:
+            context['next_influencer_pk'] = next_influencer.pk
+        else:
+            context['next_influencer_pk'] = self.influencer_pk
+
+        context['max_followers_count'] = models.Influencer.objects.all(
+        ).aggregate(Max('followers_count'))
+        context['max_tweet_count'] = models.Influencer.objects.all(
+        ).aggregate(Max('tweet_count'))
+        context['max_influence_ratio'] = models.Influencer.objects.all(
+        ).aggregate(Max('influence_ratio'))
+        context['max_viral_ratio'] = models.Influencer.objects.all(
+        ).aggregate(Max('viral_ratio'))
+        context['max_engagement_ratio'] = models.Influencer.objects.all(
+        ).aggregate(Max('engagement_ratio'))
+
+        if self.dm_thread_form is not None:
+            context['dm_thread_form'] = self.dm_thread_form
+        else:
+            context['dm_thread_form'] = forms.DirectMessageThreadForm
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+        self.object = self.get_object()
+        return super().post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return os.path.join(reverse(
+            'discover:direct_messages', kwargs={'pk': self.request.user.pk, 'thread_pk': self.thread_pk}))
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        influencer_pk = self.request.POST.get('influencer')
+        obj.influencer = models.Influencer.objects.get(pk=influencer_pk)
+        obj.save()
+        self.thread_pk = obj.pk
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data())
+
+
+class SingleInfluencerView(View):
+
+    def get(self, request, *args, **kwargs):
+        view = SingleInfluencerDetailView.as_view(influencer_pk=kwargs['influencer_pk'])
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = SingleInfluencerDirectMessageThreadCreateView.as_view(influencer_pk=kwargs['influencer_pk'])
         return view(request, *args, **kwargs)
 
 
