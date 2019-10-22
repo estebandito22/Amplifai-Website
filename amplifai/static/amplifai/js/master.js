@@ -394,3 +394,15 @@ function scrollFunction() {
     document.getElementById("navbar").style.top = "0";
   }
 }
+
+
+// $( '#navbar .navbar-nav a' ).on( 'click', function () {
+//   console.log($( '#navbar .navbar-nav' ).find( 'li.active' ))
+// 	$( '#navbar .navbar-nav' ).find( 'li.active' ).removeClass( 'active' );
+// 	$( this ).parent( 'li' ).addClass( 'active' );
+// });
+
+$(document).ready(function() {
+  $('li.active').removeClass('active');
+  $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
+});

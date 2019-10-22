@@ -46,26 +46,40 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="collapsingNavbar">
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ml-auto" id="navContainer">
           {% if user.is_authenticated %}
                 <li class="nav-item active">
                   <a href="{% url 'discover:influencers' pk=user.pk %}" class="nav-link">Connect</a>
                 </li>
-                <li>
+                <li class="nav-item">
                   <a href="{% url 'social:create_post' pk=user.pk %}" class="nav-link">Create</a>
                 </li>
-                <li>
+                <li class="nav-item">
                   <a href="{% url 'social:promote' pk=user.pk %}" class="nav-link">Promote</a>
                 </li>
-                <li>
+                <li class="nav-item">
                   <a href="{% url 'discover:direct_messages' pk=user.pk thread_pk=0 %}" class="nav-link"><i class="fa fa-lg fa-inbox"></i></a>
                 </li>
-                <li>
+                <!-- <li>
                   <a href="{% url 'accounts:profile' pk=user.pk %}" class="nav-link"><i class="fa fa-lg fa-user-circle"></i></a>
                 </li>
                 <li>
                   <a href="{% url 'accounts:logout' %}" class="nav-link">Log out</a>
+                </li> -->
+                <li class="nav-item">
+                  <!-- dropdown -->
+                  <div class="dropdown show text-right nav-link">
+                    <a class="elipsis-icon dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-lg fa-user-circle"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                      <a class="dropdown-item" href="{% url 'accounts:profile' pk=user.pk %}">Profile</a>
+                      <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+                    </div>
+                  </div>
                 </li>
+
+                <!-- end dropdown -->
           {% else %}
                 <!-- <li class="nav-item active">
                   <a href="{% url 'home' %}" class="nav-link">Products</a>
