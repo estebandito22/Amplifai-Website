@@ -80,6 +80,33 @@ class SocialPostView(SingleObjectMixin, FormView):
         return context
 
 
+class SocialPostQueueView(DetailView):
+    template_name = "social/create_post.html"
+    context_object_name = 'user_details'
+    model = models.User
+    social_post_form = None
+    social_post_promotion_form = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['social_posts_queue'] = self.object.socialpost_set.filter(
+            post_date__range=["2019-08-01", "2020-09-10"]).order_by('post_date')
+
+        if self.social_post_form is not None:
+            context['social_post_form'] = self.social_post_form
+        else:
+            context['social_post_form'] = forms.SocialPostForm
+        context['social_post_form'].prefix = 'social_post_form'
+
+        if self.social_post_promotion_form is not None:
+            context['social_post_promotion_form'] = self.social_post_promotion_form
+        else:
+            context['social_post_promotion_form'] = forms.SocialPostPromotionForm
+        context['social_post_promotion_form'].prefix = 'social_post_promotion_form'
+
+        return context
+
+
 class HashtagsView(DetailView):
     template_name = "social/create_post.html"
     context_object_name = 'user_details'
@@ -119,7 +146,7 @@ class HashtagsView(DetailView):
 class CreateSocialPostView(View):
 
     def get(self, request, *args, **kwargs):
-        view = HashtagsView.as_view()
+        view = SocialPostQueueView.as_view()
         return view(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):

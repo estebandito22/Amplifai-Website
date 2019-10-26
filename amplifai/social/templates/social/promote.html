@@ -31,6 +31,7 @@
                   <div class="square-image">
                     <img src="{{ x.0.media.url }}" alt="" class="img-fluid">
                   </div>
+                  <!-- <div class="thumb-400" style="background-image: url(' {{ x.0.media.url }} ');"></div> -->
                   <div class="social-post-text-area">
                     <p>{{ x.0.text }}</p>
                   </div>
@@ -50,10 +51,10 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="card-body pt-4 pb-3 h-100">
+                  <div class="card-body pt-0 pb-3 h-100">
                     <div class="row h-100">
                       <div class="col-6 organic-col">
-                        <div class="row pl-3 pb-2 pt-2">
+                        <div class="row pl-2 ml-2 pb-2 pt-2">
                           <h5>Organic</h5>
                         </div>
                         <div class="row">
@@ -72,7 +73,7 @@
                             </div>
                           </div><!-- linear-prog-area-->
                         </div>
-                        <div class="row pl-3 pb-2 pt-2">
+                        <div class="row pl-2 ml-2 pb-2 pt-2">
                           <h5>Paid</h5>
                         </div>
                         <div class="row">
@@ -164,7 +165,7 @@
           <h4>Recent</h4>
         </div>
       {% else %}
-        <div class="col-6">
+        <div class="col-lg-6 col-md-12 pb-5">
           <div class="row mb-4 h-100 mr-2 ml-1 shadow-sm border">
             <!-- left side info -->
             <div class="col-md-6 col-sm-12 pr-0 pl-0 border-right">

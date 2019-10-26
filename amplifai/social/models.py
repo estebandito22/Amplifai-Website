@@ -22,6 +22,7 @@ class SocialPost(models.Model):
     twitter_post = models.BooleanField(default=False)
     instagram_post = models.BooleanField(default=False)
     facebook_post = models.BooleanField(default=False)
+    post_date = models.DateTimeField()
 
     def __str__(self):
         return self.text

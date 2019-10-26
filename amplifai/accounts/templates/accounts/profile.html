@@ -104,7 +104,7 @@
       {% for album in user_details.user.albums.all reversed %}
         {% if album.is_song %}
           <a id="album-card-{{ album.pk }}"></a>
-          <div class="col-md-4 col-sm-12" id="album-card-{{ forloop.counter }}">
+          <div class="col-lg-4 col-md-12 pb-3" id="album-card-{{ forloop.counter }}">
             <div class="card p-0 m-2 bg-white border shadow-sm">
               <div class="square-image">
                   <img src="{{ album.album_logo.url }}" class="img-fluid" style="max-width: 100%;">
